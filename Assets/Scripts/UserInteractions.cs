@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class UserInteractions : MonoBehaviour
 {
@@ -25,7 +26,9 @@ public class UserInteractions : MonoBehaviour
         
         if (Input.GetMouseButtonDown(0))
         {
-            SelectObjectByMousePos();
+            var	isClicOnUI = EventSystem.current.IsPointerOverGameObject();
+            if (!isClicOnUI)
+                SelectObjectByMousePos();
         }
     }
 
