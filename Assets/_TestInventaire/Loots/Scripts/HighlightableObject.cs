@@ -32,6 +32,16 @@ public class HighlightableObject : MonoBehaviour
 
 	Outline outline;
 
+	public virtual  void Awake() {
+		outline = gameObject.AddComponent<Outline>();
+
+		outline.OutlineMode = Outline.Mode.OutlineVisible;
+		outline.OutlineColor = Color.green;
+		outline.OutlineWidth = 5f;
+		outline.enabled = false;
+
+	}
+
 	protected virtual void Start() {
 		// pour les projecteurs
 		projector = GetComponentInChildren<ProjectorDriver>();
@@ -44,12 +54,6 @@ public class HighlightableObject : MonoBehaviour
 
 		Highlight(false);
 
-		outline = gameObject.AddComponent<Outline>();
-
-		outline.OutlineMode = Outline.Mode.OutlineVisible;
-		outline.OutlineColor = Color.green;
-		outline.OutlineWidth = 5f;
-		outline.enabled = false;
 	}
 
 	/// <summary>

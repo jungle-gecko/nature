@@ -45,7 +45,7 @@ public class Loot : InteractableObject
 
 	Vector3 m_OriginalPosition;
 	Vector3 m_TargetPoint;
-	float m_AnimationTimer = 0.0f;
+	float m_AnimationTimer = 1f;
 
 	public Loot(Loot item) {
 		ItemName = item.ItemName;
@@ -59,11 +59,14 @@ public class Loot : InteractableObject
 		UsageEffects = item.UsageEffects;
 	}
 
-	void Awake() {
-		m_OriginalPosition = transform.localPosition;                    // préparation
-		m_TargetPoint = transform.localPosition;                         // de l'animation
-		m_AnimationTimer = AnimationTime - 0.1f;                    // de mise en place
+	public override void Awake() {
+		base.Awake();
+		m_AnimationTimer = 1f;
+		//m_OriginalPosition = transform.position;                    // préparation
+		//m_TargetPoint = transform.position;                         // de l'animation
+		//m_AnimationTimer = AnimationTime - 0.1f;                    // de mise en place
 	}
+
 
 	void Update() {
 		// animation de mise en place
@@ -72,12 +75,12 @@ public class Loot : InteractableObject
 			float ratio = Mathf.Clamp01(m_AnimationTimer / AnimationTime);
 			Vector3 currentPos = Vector3.Lerp(m_OriginalPosition, m_TargetPoint, ratio);
 			currentPos.y += Mathf.Sin(ratio * Mathf.PI) * 2.0f;
-			transform.localPosition = currentPos;
+			transform.position = currentPos;
 		}
 
-		if (Input.GetButtonDown("Fire1")) {
-			Take();
-		}
+		//if (Input.GetButtonDown("Fire1")) {
+		//	Take();
+		//}
 
 	}
 

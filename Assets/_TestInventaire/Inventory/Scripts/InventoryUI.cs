@@ -242,7 +242,7 @@ public class InventoryUI : UIBase
 		//}
 		//item.transform.SetParent(target.transform, false);
 		item.transform.position = pos;
-		item.StartAnimation();
+		//item.StartAnimation();
 	}
 
 	public void SaveAndHide() {

@@ -20,10 +20,9 @@ public class Target : InteractableObject
 	public List<LootCategory> filterItems;
 
 	Transform prefabHolder;
-	Transform target;                 
+	Transform target;
 
-	public override bool IsInteractable() => isFree 
-		&& ( inventoryUI.selectedEntry!=null);         // #RGS retiré "playerManager.m_InvItemDragging!=null ||" pour test inventaire  sans "player manager"
+	public override bool IsInteractable() => isFree && (inventoryUI.selectedEntry != null);         // #RGS retiré "playerManager.m_InvItemDragging!=null ||" pour test inventaire  sans "player manager"
 
 	public bool isFree => !GetComponentInChildren<Loot>();      // ne peut contenir qu'un seul objet d'inventaire
 
@@ -54,27 +53,47 @@ public class Target : InteractableObject
 		}
 	}
 
-	private void Update() {
-		if (Input.GetButtonDown("Fire1")) {
-			if (inventoryUI.selectedEntry != null) {
-				if (isAvailable(inventoryUI.selectedEntry.item)) {
-					inventoryUI.selectedEntry.item.Drop(this);
-					Highlight(false);
-				}
-			}
-		}
-	}
-
-
-	//public override void OnMouseUp() {
-	//	base.OnMouseUp();
-	//	if (InventoryUI.Instance.selectedEntry != null) {
-	//		if (isAvailable(InventoryUI.Instance.selectedEntry.item)) {
-	//			InventoryUI.Instance.selectedEntry.item.Drop(this);
-	//			Highlight(false);
+	//private void Update() {
+	//	if (Input.GetButtonDown("Fire1")) {
+	//		if (inventoryUI.selectedEntry != null) {
+	//			if (isAvailable(inventoryUI.selectedEntry.item)) {
+	//				inventoryUI.selectedEntry.item.Drop(this);
+	//				Highlight(false);
+	//			}
 	//		}
 	//	}
 	//}
+
+
+	private void OnMouseEnter() {
+		if (inventoryUI.selectedEntry != null) {
+			var item = inventoryUI.selectedEntry.item;
+			if (isFree &&
+				item.dropable &&
+				((filterMode == FilterMode.allow && filterItems.Contains(item.lootCategory)) ||
+				(filterMode == FilterMode.refuse && filterItems.Contains(item.lootCategory)))) {
+
+				ToggleOutline(true);
+				Highlight(true);
+			}
+
+		}
+	}
+
+	private void OnMouseExit() {
+		ToggleOutline(false);
+		Highlight(false);
+	}
+
+	public override void OnMouseUp() {
+		base.OnMouseUp();
+		if (inventoryUI.selectedEntry != null) {
+			if (isAvailable(inventoryUI.selectedEntry.item)) {
+				inventoryUI.selectedEntry.item.Drop(this);
+				Highlight(false);
+			}
+		}
+	}
 
 }
 
