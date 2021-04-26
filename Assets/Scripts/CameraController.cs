@@ -2,47 +2,38 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraController : MonoBehaviour
-{
-    private Transform cameraTarget;
-    private Transform newTarget;
-    private Camera cameraComponent;
-    public int speed = 10;
-    public int defaultZoom = 50;
-    public int focusZoom = 20;
-    private int targetZoom;
+public class CameraController : MonoBehaviour {
+	private Transform cameraTarget;
+	private Camera cameraComponent;
+	public int speed = 10;
+	public int defaultZoom = 50;
+	public int focusZoom = 20;
 
-    void Start()
-    {
-        cameraTarget = transform.parent;
-        newTarget = cameraTarget;
-        targetZoom = defaultZoom;
-        cameraComponent = GetComponent<Camera>();
-    }
+	void Start() {
+		cameraTarget = transform.parent;
+		cameraComponent = GetComponent<Camera>();
+	}
 
-    void Update()
-    {
-        if(Vector3.Distance(newTarget.position, cameraTarget.position) >  Vector3.kEpsilon)
-        {
-            cameraTarget.position = Vector3.Lerp(cameraTarget.position, newTarget.position, Time.deltaTime * speed);
-        }
-        
-        if(Mathf.Abs(cameraComponent.orthographicSize - (int) targetZoom) >  Mathf.Epsilon)
-        {
-            cameraComponent.orthographicSize = Mathf.Lerp(cameraComponent.orthographicSize, (int) targetZoom, Time.deltaTime * speed);
-        }
-    }
-    
-    public void Focus(Transform target)
-    {
-        newTarget = target;
-        targetZoom = focusZoom;
-    }
+	public void Focus() {
+		StartCoroutine(IFocus(focusZoom));
+	}
 
-    public void Unfocus()
-    {
-        targetZoom = defaultZoom;
-    }
+	public void Unfocus() {
+		StartCoroutine(IFocus(defaultZoom));
+	}
+	IEnumerator IFocus(float zoom) {
+		float duration = .2f;
+		float t = 0;
+		float k = 0;
+		float start = cameraComponent.orthographicSize;
+		while (t < duration) {
+			t += Time.deltaTime;
+			k = Mathf.Min(t / duration, 1f);
+			cameraComponent.orthographicSize = Mathf.Lerp(start, zoom, k);
+			yield return null;
+		}
+
+	}
 
 
 }
